@@ -26,6 +26,7 @@ func main() {
 
 func handle(conn net.Conn) {
 	scanner := bufio.NewScanner(conn)
+	// scanner.Scan returns a boolean, nice to note that it's in control of the loop in this way
 	for scanner.Scan() {
 		ln := scanner.Text()
 		fmt.Println(ln)
