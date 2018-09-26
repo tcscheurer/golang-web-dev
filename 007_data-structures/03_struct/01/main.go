@@ -29,3 +29,5 @@ func main() {
 		log.Fatalln(err)
 	}
 }
+
+// Data interface is of type sage .... our variable buddha

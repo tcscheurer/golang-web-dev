@@ -21,3 +21,5 @@ func main() {
 		log.Fatalln(err)
 	}
 }
+
+// Here we pass a slice of sting as the data interface to the Execute method

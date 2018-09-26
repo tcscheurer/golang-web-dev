@@ -20,6 +20,9 @@ type car struct {
 	Doors        int
 }
 
+// A FuncMap type has the underlying type of map[string]interface{}
+// this means that a FuncMap is a map of strings to any other type -- here we use functions
+
 // create a FuncMap to register functions.
 // "uc" is what the func will be called in the template
 // "uc" is the ToUpper func from package strings
@@ -31,6 +34,7 @@ var fm = template.FuncMap{
 }
 
 func init() {
+	// We have to do this like this so that the functions are defined for the .gohtml file when parsed
 	tpl = template.Must(template.New("").Funcs(fm).ParseFiles("tpl.gohtml"))
 }
 

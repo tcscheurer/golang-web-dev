@@ -55,6 +55,7 @@ func main() {
 	sages := []sage{b, g, m}
 	cars := []car{f, c}
 
+	// "Anonumous type" nice way to inject template with composite literal
 	data := struct {
 		Wisdom    []sage
 		Transport []car

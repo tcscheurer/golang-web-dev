@@ -18,3 +18,5 @@ func main() {
 		log.Fatalln(err)
 	}
 }
+
+// Here we sub 42 for the data interface, we were previously passing nil

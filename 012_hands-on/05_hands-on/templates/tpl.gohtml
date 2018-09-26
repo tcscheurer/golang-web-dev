@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body>
+
+
+    Breakfast
+    {{range .Breakfast}}
+    {{.ItemName}}
+    {{.Price}}
+    Kcals - {{.NutritionData.Calories}}
+    Protien - {{.NutritionData.Protien}}
+    Fat - {{.NutritionData.Fat}}
+    Carbohydrates - {{.NutritionData.Carbohydrates}}
+    {{end}}
+
+    Lunch
+    {{range .Lunch}}
+    {{.ItemName}}
+    {{.Price}}
+    Kcals - {{.NutritionData.Calories}}
+    Protien - {{.NutritionData.Protien}}
+    Fat - {{.NutritionData.Fat}}
+    Carbohydrates - {{.NutritionData.Carbohydrates}}
+    {{end}}
+
+    Dinner
+    {{range .Dinner}}
+    {{.ItemName}}
+    {{.Price}}
+    Kcals - {{.NutritionData.Calories}}
+    Protien - {{.NutritionData.Protien}}
+    Fat - {{.NutritionData.Fat}}
+    Carbohydrates - {{.NutritionData.Carbohydrates}}
+    {{end}}
+
+
+</body>
+</html>
