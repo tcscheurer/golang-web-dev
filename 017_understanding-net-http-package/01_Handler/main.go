@@ -14,3 +14,6 @@ func (m hotdog) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 func main() {
 
 }
+
+// Any type that defines ServeHTTP(w http.ResponseWriter, req *http.Request) implements the Handler Interface!!!!
+// ResponseWriter Implements the writer Interface -> Write([]byte)(int, error)

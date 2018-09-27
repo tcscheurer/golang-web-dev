@@ -15,8 +15,8 @@ func c(res http.ResponseWriter, req *http.Request) {
 
 func main() {
 
-	http.HandleFunc("/dog", d)
-	http.HandleFunc("/cat", c)
+	http.HandleFunc("/dog", d) // Handle func does not take in a Handler as second param
+	http.HandleFunc("/cat", c) // it takes a func(http.ResponseWriter, *http.Request) instead
 
 	http.ListenAndServe(":8080", nil)
 }

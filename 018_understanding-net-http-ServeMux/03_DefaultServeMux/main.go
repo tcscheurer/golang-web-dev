@@ -21,8 +21,8 @@ func main() {
 	var d hotdog
 	var c hotcat
 
-	http.Handle("/dog", d)
+	http.Handle("/dog", d) // <- Since we are calling the package level function Handle instead of the one that takes *ServeMux as a receiver, we are registering these with the default servemux
 	http.Handle("/cat", c)
 
-	http.ListenAndServe(":8080", nil)
+	http.ListenAndServe(":8080", nil) // <- nil tells the compiler to use the Default Serve Mux
 }

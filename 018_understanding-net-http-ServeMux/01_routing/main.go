@@ -5,7 +5,7 @@ import (
 	"net/http"
 )
 
-type hotdog int
+type hotdog int // <--- Implements Handler Interface !!!!!
 
 func (m hotdog) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	switch req.URL.Path {
