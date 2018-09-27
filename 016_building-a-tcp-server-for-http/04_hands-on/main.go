@@ -54,8 +54,6 @@ func request(conn net.Conn) {
 			for k, v := range muxMap {
 				if k == m {
 					v.(func(net.Conn, string))(conn, m)
-				} else {
-					fmt.Fprint(conn, "HTTP/1.1 404 \r\n")
 				}
 			}
 		}
