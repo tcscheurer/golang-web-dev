@@ -1,9 +1,10 @@
 package main
 
 import (
-	"github.com/satori/go.uuid"
 	"html/template"
 	"net/http"
+
+	"github.com/satori/go.uuid"
 )
 
 type user struct {
@@ -42,8 +43,10 @@ func index(w http.ResponseWriter, req *http.Request) {
 
 	// if the user exists already, get user
 	var u user
-	if un, ok := dbSessions[c.Value]; ok {
-		u = dbUsers[un]
+	if un, ok := dbSessions[c.Value]; ok { // <- This is the map ", ok idiom"
+		u = dbUsers[un] // un may hold the zero value of a string
+		// So we need to check to bool to make sure
+		// its actually the value at the key
 	}
 
 	// process form submission

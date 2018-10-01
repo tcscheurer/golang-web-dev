@@ -2,9 +2,10 @@ package main
 
 import (
 	"fmt"
-	"github.com/satori/go.uuid"
 	"net/http"
 	"time"
+
+	"github.com/satori/go.uuid"
 )
 
 func getUser(w http.ResponseWriter, req *http.Request) user {
@@ -23,29 +24,29 @@ func getUser(w http.ResponseWriter, req *http.Request) user {
 
 	// if the user exists already, get user
 	var u user
-	if s, ok := dbSessions[c.Value]; ok {
-		s.lastActivity = time.Now()
-		dbSessions[c.Value] = s
-		u = dbUsers[s.un]
+	if s, ok := dbSessions[c.Value]; ok { // if , ok idiom
+		s.lastActivity = time.Now() // update lastActivity
+		dbSessions[c.Value] = s     // Update the value stored in the sessions map
+		u = dbUsers[s.un]           // update found user locally
 	}
-	return u
+	return u // return the found user from the Users map
 }
 
 func alreadyLoggedIn(w http.ResponseWriter, req *http.Request) bool {
 	c, err := req.Cookie("session")
 	if err != nil {
-		return false
+		return false // If the session cookie not found, User isn't logged in
 	}
 	s, ok := dbSessions[c.Value]
 	if ok {
-		s.lastActivity = time.Now()
-		dbSessions[c.Value] = s
+		s.lastActivity = time.Now() // If we found the session in the map, update lastActivity
+		dbSessions[c.Value] = s     // Put updated value in map
 	}
-	_, ok = dbUsers[s.un]
+	_, ok = dbUsers[s.un] // store if we found the user locally
 	// refresh session
-	c.MaxAge = sessionLength
-	http.SetCookie(w, c)
-	return ok
+	c.MaxAge = sessionLength // Update the maxAge of cookie, again we're using 30 seconds here
+	http.SetCookie(w, c)     // set cookie with response writer, pointer to the cookie we found
+	return ok                // return boolean that says we found the user or not
 }
 
 func cleanSessions() {
@@ -64,7 +65,7 @@ func cleanSessions() {
 // for demonstration purposes
 func showSessions() {
 	fmt.Println("********")
-	for k, v := range dbSessions {
+	for k, v := range dbSessions { // range over the sessions map and print them
 		fmt.Println(k, v.un)
 	}
 	fmt.Println("")

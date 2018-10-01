@@ -1,11 +1,12 @@
 package main
 
 import (
-	"github.com/satori/go.uuid"
-	"golang.org/x/crypto/bcrypt"
 	"html/template"
 	"net/http"
 	"time"
+
+	"github.com/satori/go.uuid"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type user struct {
@@ -64,7 +65,7 @@ func bar(w http.ResponseWriter, req *http.Request) {
 }
 
 func signup(w http.ResponseWriter, req *http.Request) {
-	if alreadyLoggedIn(w, req) {
+	if alreadyLoggedIn(w, req) { // hit our middleware, if already loged in, you don't need to sign up
 		http.Redirect(w, req, "/", http.StatusSeeOther)
 		return
 	}
@@ -78,29 +79,29 @@ func signup(w http.ResponseWriter, req *http.Request) {
 		l := req.FormValue("lastname")
 		r := req.FormValue("role")
 		// username taken?
-		if _, ok := dbUsers[un]; ok {
+		if _, ok := dbUsers[un]; ok { // if , ok is true we already have a user with the associated key
 			http.Error(w, "Username already taken", http.StatusForbidden)
 			return
 		}
 		// create session
-		sID, _ := uuid.NewV4()
+		sID, _ := uuid.NewV4() // here we didn't find a user with that info, generate new UUID, and give a cookie
 		c := &http.Cookie{
 			Name:  "session",
 			Value: sID.String(),
 		}
 		c.MaxAge = sessionLength
 		http.SetCookie(w, c)
-		dbSessions[c.Value] = session{un, time.Now()}
+		dbSessions[c.Value] = session{un, time.Now()} // Update the sessions map
 		// store user in dbUsers
-		bs, err := bcrypt.GenerateFromPassword([]byte(p), bcrypt.MinCost)
+		bs, err := bcrypt.GenerateFromPassword([]byte(p), bcrypt.MinCost) // storying our encrypted password in a byte slice, generate from string p
 		if err != nil {
 			http.Error(w, "Internal server error", http.StatusInternalServerError)
 			return
 		}
-		u = user{un, bs, f, l, r}
-		dbUsers[un] = u
+		u = user{un, bs, f, l, r} // store user locally
+		dbUsers[un] = u           // set that user into the users map
 		// redirect
-		http.Redirect(w, req, "/", http.StatusSeeOther)
+		http.Redirect(w, req, "/", http.StatusSeeOther) // once logic is complete, redirect to the index route
 		return
 	}
 	showSessions() // for demonstration purposes
@@ -118,31 +119,32 @@ func login(w http.ResponseWriter, req *http.Request) {
 		un := req.FormValue("username")
 		p := req.FormValue("password")
 		// is there a username?
-		u, ok := dbUsers[un]
+		u, ok := dbUsers[un] // Find user from users map
 		if !ok {
 			http.Error(w, "Username and/or password do not match", http.StatusForbidden)
 			return
 		}
 		// does the entered password match the stored password?
-		err := bcrypt.CompareHashAndPassword(u.Password, []byte(p))
+		err := bcrypt.CompareHashAndPassword(u.Password, []byte(p)) //If we found the user, see if the password is correct
 		if err != nil {
-			http.Error(w, "Username and/or password do not match", http.StatusForbidden)
+			http.Error(w, "Username and/or password do not match", http.StatusForbidden) // If not respond with this error
 			return
 		}
 		// create session
-		sID, _ := uuid.NewV4()
+		sID, _ := uuid.NewV4() // generate new UUID for cookie Value
 		c := &http.Cookie{
 			Name:  "session",
 			Value: sID.String(),
 		}
-		c.MaxAge = sessionLength
+		c.MaxAge = sessionLength // update MaxAge of cookie
 		http.SetCookie(w, c)
-		dbSessions[c.Value] = session{un, time.Now()}
-		http.Redirect(w, req, "/", http.StatusSeeOther)
+		dbSessions[c.Value] = session{un, time.Now()}   // Update sessions map
+		http.Redirect(w, req, "/", http.StatusSeeOther) // User is now "logged in" redirect home
 		return
 	}
-	showSessions() // for demonstration purposes
-	tpl.ExecuteTemplate(w, "login.gohtml", u)
+	showSessions()                            // for demonstration purposes
+	tpl.ExecuteTemplate(w, "login.gohtml", u) // If it's not a POST request execute the template
+	// u as the data interface here is kind of unneccessary because if we get here, nothing is in the user type
 }
 
 func logout(w http.ResponseWriter, req *http.Request) {
@@ -167,7 +169,7 @@ func logout(w http.ResponseWriter, req *http.Request) {
 
 func authorized(h http.HandlerFunc) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if !alreadyLoggedIn(w, r)  {
+		if !alreadyLoggedIn(w, r) {
 			//http.Error(w, "not logged in", http.StatusUnauthorized)
 			http.Redirect(w, r, "/", http.StatusSeeOther)
 			return // don't call original handler

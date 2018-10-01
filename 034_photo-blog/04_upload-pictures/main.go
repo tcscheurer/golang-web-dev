@@ -3,13 +3,14 @@ package main
 import (
 	"crypto/sha1"
 	"fmt"
-	"github.com/satori/go.uuid"
 	"html/template"
 	"io"
 	"net/http"
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/satori/go.uuid"
 )
 
 var tpl *template.Template
@@ -50,12 +51,12 @@ func index(w http.ResponseWriter, req *http.Request) {
 		}
 		defer nf.Close()
 		// copy
-		mf.Seek(0, 0)
-		io.Copy(nf, mf)
+		mf.Seek(0, 0)   // Re-setting the read/write head to the beggining of the file that came in
+		io.Copy(nf, mf) // then copying it to our local file
 		// add filename to this user's cookie
 		c = appendValue(w, c, fname)
 	}
-	xs := strings.Split(c.Value, "|")
+	xs := strings.Split(c.Value, "|") // Grabbing values split on "|" from the cookie and passing it in as the data interface
 	tpl.ExecuteTemplate(w, "index.gohtml", xs)
 }
 

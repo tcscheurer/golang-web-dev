@@ -40,7 +40,7 @@ func mshl(w http.ResponseWriter, req *http.Request) {
 		Lname: "Bond",
 		Items: []string{"Suit", "Gun", "Wry sense of humor"},
 	}
-	j, err := json.Marshal(p1)
+	j, err := json.Marshal(p1) // Marshalling is used when we want to store the JSON locally
 	if err != nil {
 		log.Println(err)
 	}
@@ -54,7 +54,7 @@ func encd(w http.ResponseWriter, req *http.Request) {
 		Lname: "Bond",
 		Items: []string{"Suit", "Gun", "Wry sense of humor"},
 	}
-	err := json.NewEncoder(w).Encode(p1)
+	err := json.NewEncoder(w).Encode(p1) // Encoder is used when we want to just "pipe" the JSON to our http.ResponseWriter
 	if err != nil {
 		log.Println(err)
 	}

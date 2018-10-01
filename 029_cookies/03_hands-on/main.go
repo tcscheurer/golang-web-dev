@@ -44,6 +44,8 @@ func clear(w http.ResponseWriter, req *http.Request) {
 	c, e := req.Cookie("my-counter")
 	if e != nil {
 		log.Println("Clear request came in but cookie doesn't exist")
+		http.Redirect(w, req, "/", http.StatusSeeOther)
+		return
 	}
 	c.MaxAge = -1
 	http.SetCookie(w, c)

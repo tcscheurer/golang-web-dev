@@ -26,7 +26,7 @@ func foo(w http.ResponseWriter, req *http.Request) {
 }
 
 func dbAccess(ctx context.Context) int {
-	uid := ctx.Value("userID").(int)
+	uid := ctx.Value("userID").(int) // This is an assertion, < Assert that this value from the context is an int >
 	return uid
 }
 
