@@ -8,6 +8,7 @@ import (
 )
 
 func main() {
+	http.HandleFunc("/clear", clear)
 	http.HandleFunc("/", handleIndex)
 	http.Handle("/favicon.ico", http.NotFoundHandler())
 	http.ListenAndServe(":8080", nil)
@@ -37,4 +38,14 @@ func handleIndex(w http.ResponseWriter, req *http.Request) {
 		log.Println(e)
 	}
 	fmt.Fprintln(w, "Cookie-Counter val is: ", count.Value)
+}
+
+func clear(w http.ResponseWriter, req *http.Request) {
+	c, e := req.Cookie("my-counter")
+	if e != nil {
+		log.Println("Clear request came in but cookie doesn't exist")
+	}
+	c.MaxAge = -1
+	http.SetCookie(w, c)
+	http.Redirect(w, req, "/", http.StatusSeeOther)
 }
